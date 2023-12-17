@@ -3,6 +3,10 @@ import pathlib
 
 from aocd import get_data
 
+
+# Define input data file name
+infile = 'input.txt'
+
 # Set up argument parser
 parser = argparse.ArgumentParser()
 
@@ -15,26 +19,36 @@ args = parser.parse_args()
 
 # If user provided command-line arguments
 if args.day and args.year:
-    # List all `input.txt` files for year and day
+    # There should be only one directory for specific year and day
     path = [
-        p
-        for p in pathlib.Path.cwd().glob(
-            f'**/{args.year}/{args.day:02d}*/input.txt'
-        )
+        p for p in pathlib.Path.cwd().glob(f'**/{args.year}/{args.day:02d}*')
     ]
 
-    # There should be only one file for specific year and day
-    # Write text data to this file
-    path[0].write_text(get_data(day=args.day, year=args.year))
+    try:
+        # Write text data to file
+        path[0].joinpath(infile).write_text(
+            get_data(day=args.day, year=args.year)
+        )
+        print(f"Data saved to {path[0].joinpath(infile)}")
+    except IndexError:
+        print(
+            f"No such directory {pathlib.Path.cwd().joinpath(f'{args.year}', f'{args.day:02d}_... ')}."
+        )
 
 # If no command-line arguments
 else:
-    # Refresh data in all files
-    for path in pathlib.Path.cwd().glob(f'**/input.txt'):
-        day = (
-            path.parent.name[1:2]
-            if path.parent.name[0] == '0'
-            else path.parent.name[:2]
+    try:
+        # Find all AOC days directories
+        paths = [p for p in pathlib.Path.cwd().glob(f'**/[0-2][0-9]_*')]
+        if not paths:
+            raise FileNotFoundError
+    except FileNotFoundError:
+        print(f'No directory for Advent of Code days in {pathlib.Path.cwd()}.')
+
+    # Save to `input.txt` files, eventually refresh them
+    for path in paths:
+        day = path.name[1:2] if path.name[0] == '0' else path.name[:2]
+        year = path.parent.name
+        path.joinpath(infile).write_text(
+            get_data(day=int(day), year=int(year))
         )
-        year = path.parent.parent.name
-        path.write_text(get_data(day=int(day), year=int(year)))
