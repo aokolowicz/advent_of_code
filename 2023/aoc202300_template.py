@@ -26,6 +26,11 @@ def solve(puzzle_input):
 
 
 if __name__ == "__main__":
+    # Check if user provided input file name
+    if len(sys.argv) < 2:
+        print('Provide input file name.')
+
+    # Solve puzzle
     for path in sys.argv[1:]:
         print(f"{path}:")
         puzzle_input = pathlib.Path(path).read_text().strip()
