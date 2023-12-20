@@ -22,15 +22,9 @@ def test_parse_example1(example1):
     assert example1 == ['1abc2', 'pqr3stu8vwx', 'a1b2c3d4e5f', 'treb7uchet']
 
 
-def test_part1_example1(example1):
-    """Test part 1 on example input."""
-    assert aoc.part1(example1) == 12 + 38 + 15 + 77
-
-
-@pytest.mark.skip(reason="Not implemented")
-def test_part2_example1(example1):
-    """Test part 2 on example input."""
-    assert aoc.part2(example1) == [
+def test_parse_example2(example2):
+    """Test that input is parsed properly."""
+    assert example2 == [
         'two1nine',
         'eightwothree',
         'abcone2threexyz',
@@ -39,6 +33,16 @@ def test_part2_example1(example1):
         'zoneight234',
         '7pqrstsixteen'
     ]
+
+
+def test_part1_example1(example1):
+    """Test part 1 on example input."""
+    assert aoc.part1(example1) == 12 + 38 + 15 + 77
+
+
+def test_part2_example1(example1):
+    """Test part 2 on example input."""
+    assert aoc.part2(example1) == 12 + 38 + 15 + 77
 
 
 @pytest.mark.skip(reason="Not implemented")

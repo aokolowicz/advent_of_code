@@ -25,26 +25,46 @@ def part1(calibration_lines):
 
 def part2(calibration_lines):
     """Solve part 2."""
+    # Fails
 
-    # spelled_digits = {
-    #     'one': 1,
-    #     'two': 2,
-    #     'three': 3,
-    #     'four': 4,
-    #     'five': 5,
-    #     'six': 6,
-    #     'seven': 7,
-    #     'eight': 8,
-    #     'nine': 9,
-    # }
+    spelled_digits = {
+        'one': 1,
+        'two': 2,
+        'three': 3,
+        'four': 4,
+        'five': 5,
+        'six': 6,
+        'seven': 7,
+        'eight': 8,
+        'nine': 9,
+    }
 
-    # for line in calibration_lines:
-    #     # spelled = [line.find(digit) for digit in spelled_digits.keys()]
-    #     spelled = {line.find(s_digit):n_digit for (s_digit, n_digit) in zip(spelled_digits.keys(), spelled_digits.values())}
-    #     numeric = [line.find(char) for char in line if char.isdigit()]
+    two_digit_number_list = []
+
+    for line in calibration_lines:
+        # Find indexes of spelled and numeric digits
+        # TODO: digits can be spelled multiple times
+        spelled = {line.find(s):n for (s, n) in spelled_digits.items() if line.find(s) != -1}
+        numeric = [line.find(char) for char in line if char.isdigit()]
         
-    #     if spelled[0] < numeric[0]:
+        # If lists are not empty
+        if spelled and numeric:
+            # Determine first and last digit based on index in line
+            first_digit = spelled[min(spelled)] if min(spelled) < numeric[0] else int(line[numeric[0]])
+            last_digit = spelled[max(spelled)] if max(spelled) > numeric[-1] else int(line[numeric[-1]])
+        # If numeric is empty
+        elif spelled:
+            first_digit = spelled[min(spelled)]
+            last_digit = spelled[max(spelled)]
+        # If spelled is impty
+        elif numeric:
+            first_digit = int(line[numeric[0]])
+            last_digit = int(line[numeric[-1]])
 
+        two_digit_number_list.append(first_digit * 10 + last_digit)
+        print(line, first_digit * 10 + last_digit)
+
+    return sum(two_digit_number_list)
 
 
 def solve(puzzle_input):
@@ -57,6 +77,11 @@ def solve(puzzle_input):
 
 
 if __name__ == "__main__":
+    # Check if user provided input file name
+    if len(sys.argv) < 2:
+        print('Provide input file name.')
+
+    # Solve puzzle   
     for path in sys.argv[1:]:
         print(f"{path}:")
         puzzle_input = pathlib.Path(path).read_text().strip()
