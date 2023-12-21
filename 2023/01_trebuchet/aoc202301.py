@@ -1,4 +1,5 @@
 import pathlib
+import re
 import sys
 
 from aocd import submit
@@ -25,7 +26,8 @@ def part1(calibration_lines):
 
 def part2(calibration_lines):
     """Solve part 2."""
-    # Fails
+
+    # TODO: findings should overlap
 
     spelled_digits = {
         'one': 1,
@@ -39,30 +41,29 @@ def part2(calibration_lines):
         'nine': 9,
     }
 
+    # Define regex pattern
+    pattern = '|'.join(list(spelled_digits.keys()) + [str(d) for d in spelled_digits.values()])
+    pattern = '(' + pattern + ')'
+    
     two_digit_number_list = []
 
+    # Find indexes of numeric and spelled  digits
     for line in calibration_lines:
-        # Find indexes of spelled and numeric digits
-        # TODO: digits can be spelled multiple times
-        spelled = {line.find(s):n for (s, n) in spelled_digits.items() if line.find(s) != -1}
-        numeric = [line.find(char) for char in line if char.isdigit()]
+        digits = {match.start():match.group(0) for match in re.finditer(pattern, line)}
         
-        # If lists are not empty
-        if spelled and numeric:
-            # Determine first and last digit based on index in line
-            first_digit = spelled[min(spelled)] if min(spelled) < numeric[0] else int(line[numeric[0]])
-            last_digit = spelled[max(spelled)] if max(spelled) > numeric[-1] else int(line[numeric[-1]])
-        # If numeric is empty
-        elif spelled:
-            first_digit = spelled[min(spelled)]
-            last_digit = spelled[max(spelled)]
-        # If spelled is impty
-        elif numeric:
-            first_digit = int(line[numeric[0]])
-            last_digit = int(line[numeric[-1]])
+        # Ensure digits were found in the line
+        if digits:
+            first_value = digits[min(digits)]
+            first_digit = int(first_value) if first_value.isdigit() else spelled_digits[first_value]
 
+            last_value = digits[max(digits)]
+            last_digit = int(last_value) if last_value.isdigit() else spelled_digits[last_value]
+
+        # Add number to the list
+        with open (pathlib.Path.cwd().joinpath('output.txt'), 'a') as file:
+            file.write(str(digits) + str(first_digit * 10 + last_digit) + '\n')
+        print(digits, first_digit * 10 + last_digit)
         two_digit_number_list.append(first_digit * 10 + last_digit)
-        print(line, first_digit * 10 + last_digit)
 
     return sum(two_digit_number_list)
 

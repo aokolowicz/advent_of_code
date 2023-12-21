@@ -31,7 +31,7 @@ def test_parse_example2(example2):
         'xtwone3four',
         '4nineeightseven2',
         'zoneight234',
-        '7pqrstsixteen'
+        '7pqrstsixteen',
     ]
 
 
@@ -45,7 +45,6 @@ def test_part2_example1(example1):
     assert aoc.part2(example1) == 12 + 38 + 15 + 77
 
 
-@pytest.mark.skip(reason="Not implemented")
 def test_part2_example2(example2):
     """Test part 2 on example input."""
     assert aoc.part2(example2) == 29 + 83 + 13 + 24 + 42 + 14 + 76
