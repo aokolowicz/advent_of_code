@@ -27,8 +27,6 @@ def part1(calibration_lines):
 def part2(calibration_lines):
     """Solve part 2."""
 
-    # TODO: findings should overlap
-
     spelled_digits = {
         'one': 1,
         'two': 2,
@@ -41,28 +39,40 @@ def part2(calibration_lines):
         'nine': 9,
     }
 
-    # Define regex pattern
-    pattern = '|'.join(list(spelled_digits.keys()) + [str(d) for d in spelled_digits.values()])
+    # Define regex pattern to capture numeric and spelled digits
+    pattern = '|'.join(
+        list(spelled_digits.keys()) + [str(d) for d in spelled_digits.values()]
+    )
     pattern = '(' + pattern + ')'
-    
+
     two_digit_number_list = []
 
-    # Find indexes of numeric and spelled  digits
+    # Find indexes of numeric and spelled digits, assign digits
     for line in calibration_lines:
-        digits = {match.start():match.group(0) for match in re.finditer(pattern, line)}
-        
+        # Use finditer with positive lookahead (?=...) to find
+        # all occurrences including overlapping matches
+        digits = {
+            match.start(): match.group(1)
+            for match in re.finditer(f'(?=({pattern}))', line)
+        }
+
         # Ensure digits were found in the line
         if digits:
             first_value = digits[min(digits)]
-            first_digit = int(first_value) if first_value.isdigit() else spelled_digits[first_value]
+            first_digit = (
+                int(first_value)
+                if first_value.isdigit()
+                else spelled_digits[first_value]
+            )
 
             last_value = digits[max(digits)]
-            last_digit = int(last_value) if last_value.isdigit() else spelled_digits[last_value]
+            last_digit = (
+                int(last_value)
+                if last_value.isdigit()
+                else spelled_digits[last_value]
+            )
 
         # Add number to the list
-        with open (pathlib.Path.cwd().joinpath('output.txt'), 'a') as file:
-            file.write(str(digits) + str(first_digit * 10 + last_digit) + '\n')
-        print(digits, first_digit * 10 + last_digit)
         two_digit_number_list.append(first_digit * 10 + last_digit)
 
     return sum(two_digit_number_list)
@@ -82,22 +92,22 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print('Provide input file name.')
 
-    # Solve puzzle   
+    # Solve puzzle
     for path in sys.argv[1:]:
         print(f"{path}:")
         puzzle_input = pathlib.Path(path).read_text().strip()
         solutions = solve(puzzle_input)
-        print("\n".join(str(solution) for solution in solutions), '\n')
+        print("\n".join(str(solution) for solution in solutions))
 
         # Automated submission
-        submission1 = input(f'Submit answer for part 1: {solutions[0]}? [y/N]: ')
-        if submission1.lower() != 'y':
+        submit1 = input(f'Submit answer for part 1: {solutions[0]}? [y/N]: ')
+        if submit1.lower() != 'y':
             print('Answer for part 1 not submitted.')
         else:
             submit(solutions[0], part='a', day=1, year=2023)
 
-        submission2 = input(f'Submit answer for part 2: {solutions[1]}? [y/N]: ')
-        if submission2.lower() != 'y':
+        submit2 = input(f'Submit answer for part 2: {solutions[1]}? [y/N]: ')
+        if submit2.lower() != 'y':
             print('Answer for part 2 not submitted.')
         else:
             submit(solutions[1], part='b', day=1, year=2023)
