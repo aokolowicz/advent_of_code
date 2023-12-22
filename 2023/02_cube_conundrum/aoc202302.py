@@ -16,9 +16,22 @@ def parse(puzzle_input):
         # Get numbers and colors of cubes taken out of the bag
         cubes = re.split(r', |; ', line[line.find(':') + 2:])
 
+        # Add data for a specific game ID
+        games[game_id] = cubes
+    
+    return games
+
+
+def part1(data):
+    """Solve part 1."""
+
+    # Define limits
+    limits = {'red': 12, 'green': 13, 'blue': 14}
+    total = 0
+
+    for game_id, cubes in data.items():
         # Temporary dictionary to store cubes info for game ID
         temp = {}
-
         for cube in cubes:
             # Split into individual cubes
             number, color = cube.split(' ')
@@ -29,29 +42,13 @@ def parse(puzzle_input):
             else:
                 temp.setdefault(color, number)
 
-        # Add data for a specific game ID
-        games[game_id] = temp
-
-    return games
-
-
-def part1(data):
-    """Solve part 1."""
-
-    # Defined limits
-    limits = {'red': 12, 'green': 13, 'blue': 14}
-    total = 0
-
-    for game_id, cubes in data.items():
         # Check each color against its limits
         for color in limits:
             # Avoid KeyError
-            cubes.setdefault(color, 0)
-
+            temp.setdefault(color, 0)
             # Omit the game ID if number of cubes exceeds its limits
-            if cubes[color] > limits[color]:
+            if temp[color] > limits[color]:
                 break
-
         else:
             total += game_id
 
