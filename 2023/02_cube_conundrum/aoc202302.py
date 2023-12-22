@@ -22,25 +22,15 @@ def parse(puzzle_input):
     return games
 
 
-def part1(data):
+def part1(games):
     """Solve part 1."""
 
     # Define limits
     limits = {'red': 12, 'green': 13, 'blue': 14}
     total = 0
 
-    for game_id, cubes in data.items():
-        # Temporary dictionary to store cubes info for game ID
-        temp = {}
-        for cube in cubes:
-            # Split into individual cubes
-            number, color = cube.split(' ')
-            number = int(number)
-            # Store the maximum number for each color in temp
-            if number > temp.get(color, 0):
-                temp[color] = number
-            else:
-                temp.setdefault(color, number)
+    for game_id, cubes in games.items():
+        temp = get_max(cubes)
 
         # Check each color against its limits
         for color in limits:
@@ -55,8 +45,22 @@ def part1(data):
     return total
 
 
-def part2(data):
+def part2(games):
     """Solve part 2."""
+
+    total = 0
+
+    for cubes in games.values():
+        temp = get_max(cubes)
+        power = 1
+        
+        # Calculate the power of a set of cubes
+        for number in temp.values():
+            power *= number
+
+        total += power
+    
+    return total
 
 
 def solve(puzzle_input):
@@ -66,6 +70,25 @@ def solve(puzzle_input):
     solution2 = part2(data)
 
     return solution1, solution2
+
+
+def get_max(game):
+    """Find the maximum values for cubes colors in game."""
+
+    # Temporary dictionary to store cubes info for game ID
+    cubes_info = {}
+    for cube in game:
+        # Split into individual cubes
+        cube_number, cube_color = cube.split(' ')
+        cube_number = int(cube_number)
+
+        # Store the maximum cube_number for each cube_color in temp
+        if cube_number > cubes_info.get(cube_color, 0):
+            cubes_info[cube_color] = cube_number
+        else:
+            cubes_info.setdefault(cube_color, cube_number)
+    
+    return cubes_info
 
 
 if __name__ == "__main__":
