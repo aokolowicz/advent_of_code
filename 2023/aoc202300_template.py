@@ -44,10 +44,10 @@ if __name__ == "__main__":
         if submit1.lower() != 'y':
             print('Answer for part 1 not submitted.')
         else:
-            submit(solutions[0], part='a', day=, year=)
+            submit(solutions[0], part='a', day=..., year=...)
 
         submit2 = input(f'Submit answer for part 2: {solutions[1]}? [y/N]: ')
         if submit2.lower() != 'y':
             print('Answer for part 2 not submitted.')
         else:
-            submit(solutions[1], part='b', day=, year=)
+            submit(solutions[1], part='b', day=..., year=...)
