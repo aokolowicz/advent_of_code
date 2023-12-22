@@ -3,6 +3,8 @@ import sys
 
 from aocd import submit
 
+# Fill day and year in 47 and 53 line
+
 
 def parse(puzzle_input):
     """Parse input."""
@@ -42,10 +44,10 @@ if __name__ == "__main__":
         if submit1.lower() != 'y':
             print('Answer for part 1 not submitted.')
         else:
-            submit(solutions[0], part='a', day=1, year=2023)
+            submit(solutions[0], part='a', day=, year=)
 
         submit2 = input(f'Submit answer for part 2: {solutions[1]}? [y/N]: ')
         if submit2.lower() != 'y':
             print('Answer for part 2 not submitted.')
         else:
-            submit(solutions[1], part='b', day=1, year=2023)
+            submit(solutions[1], part='b', day=, year=)
